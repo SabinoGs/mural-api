@@ -8,9 +8,12 @@ authors = ["Gustavo Sabino <gustavo.sabino@olist.com>"]
 python = "^3.8"
 fastapi = "^0.75.0"
 uvicorn = {extras = ["standard"], version = "^0.17.6"}
-SQLAlchemy = "^1.4.36"
+SQLAlchemy = {extras = ["asyncio"], version = "^1.4.36"}
 python-dotenv = "^0.20.0"
-fastapi-users = {extras = ["sqlalchemy"], version="10.0.2"}
+fastapi-users = {extras = ["sqlalchemy"], version="10.0.3"}
+aiosqlite = "^0.17.0"
+asyncpg = "^0.25.0"
+fastapi-users-db-sqlalchemy = "4.0.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
