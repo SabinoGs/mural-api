@@ -7,8 +7,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi_users_db_sqlalchemy import AsyncSession, SQLAlchemyUserDatabase
 from fastapi_users import FastAPIUsers
 
-from mural_api.sql.config import create_db_and_tables, engine, get_async_session
-
 from mural_api.apps.user.models import Base
 from mural_api.apps.user.schemas import UserCreate, UserRead, UserUpdate 
 from mural_api.apps.user.models import User
@@ -47,6 +45,6 @@ async def root(user: User = Depends(current_active_user)):
     return {"message": "Hello World"}
 
 
-@app.on_event("startup")
-async def on_startup():
-    await create_db_and_tables()
+# @app.on_event("startup")
+# async def on_startup():
+#     await create_db_and_tables()

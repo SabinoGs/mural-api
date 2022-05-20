@@ -1,7 +1,7 @@
 import uuid
 from fastapi import Depends
 from fastapi_users import BaseUserManager, UUIDIDMixin
-from mural_api.sql import get_user_db
+from mural_api.apps.user.dependency import get_user_db
 from mural_api.apps.user.models import User
 from mural_api.settings import settings
 
