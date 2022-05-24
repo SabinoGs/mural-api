@@ -41,7 +41,7 @@ app.include_router(
 )
 
 @app.get("/")
-async def root(user: User = Depends(current_active_user)):
+def root(user: User = Depends(current_active_user)):
     return {"message": "Hello World"}
 
 

@@ -11,5 +11,5 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET_KEY
     verification_token_secret = SECRET_KEY
 
-async def get_user_manager(user_db=Depends(get_user_db)):
+def get_user_manager(user_db=Depends(get_user_db)):
     yield UserManager(user_db)
