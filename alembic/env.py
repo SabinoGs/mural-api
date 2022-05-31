@@ -7,6 +7,7 @@ from sqlalchemy import pool
 from alembic import context
 from mural_api.settings import settings
 from mural_api.apps.user.models import User
+from mural_api.apps.feed.models import InformativeCard
 from mural_api.sql.config import Base
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
