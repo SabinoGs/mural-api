@@ -8,7 +8,7 @@ class InformativeCardUpdateDictModel(BaseModel):
         return self.dict(
             exclude_unset=True,
             exclude={
-                "user_id",
+                "user",
             }
         )
 
