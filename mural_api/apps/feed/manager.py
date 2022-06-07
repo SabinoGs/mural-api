@@ -1,13 +1,15 @@
 
-from fastapi import Request
+from fastapi import Depends, Request
 import uuid
 
 from pyparsing import Optional
 from fastapi_users_db_sqlalchemy import UP
 
-from mural_api.apps.feed.models import ID, InformativeCardDataBase, InformativeCardProtocol
+from mural_api.apps.feed.models import ICP, ID, InformativeCardDataBase, InformativeCardProtocol, get_card_db
 from mural_api.apps.feed.schema import InformativeCardCreate
 
+def get_card_manager(card_db = Depends(get_card_db)):
+    yield InformativeCardManager(card_db=card_db)
 
 class InformativeCardManager():
     """
@@ -20,7 +22,7 @@ class InformativeCardManager():
     def __init__(self, card_db: InformativeCardDataBase) -> None:
         self.card_db = card_db
 
-    async def get(self, id: ID):
+    async def get(self, id: ID) -> ICP:
         """
         Get InformativeCard by id.
 
@@ -39,7 +41,7 @@ class InformativeCardManager():
         self, 
         create_dict: InformativeCardCreate, 
         current_user: UP 
-    ) -> InformativeCardProtocol:
+    ) -> ICP:
         """
         Create a InformativeCard in database
         """

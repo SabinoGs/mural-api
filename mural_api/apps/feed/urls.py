@@ -1,8 +1,12 @@
-from fastapi import APIRouter, Request, HTTPException, status
+import fastapi_users
+from fastapi import APIRouter, Depends, Request, HTTPException, status
 
+from mural_api.apps.user.models import User
 from mural_api.apps.feed.schema import InformativeCardCreate, InformativeCardRead
-from mural_api.apps.feed.erros import ErrorCode
-router = APIRouter()
+from mural_api.apps.feed.manager import InformativeCardManager, get_card_manager
+
+
+
 
 
 @router.post(
@@ -13,7 +17,8 @@ router = APIRouter()
 async def create_informative_card(
     request: Request,
     card_create: InformativeCardCreate,
-    card_manager: InformativeCardManager
+    card_manager: InformativeCardManager = Depends(get_card_manager),
+    user: User = Depends(current_user)
 ):
     try:
         created_card = await card_manager.create(card_create, request=request)

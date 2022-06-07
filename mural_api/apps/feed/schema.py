@@ -1,6 +1,6 @@
-from fastapi_users_db_sqlalchemy import GUID
+from . import models
+from typing import Generic
 from pydantic import BaseModel
-from sqlalchemy import Float
 
 
 class InformativeCardUpdateDictModel(BaseModel):
@@ -12,12 +12,12 @@ class InformativeCardUpdateDictModel(BaseModel):
             }
         )
 
-class BaseInformativeCard(BaseModel):
-    id: GUID
-    user_id: GUID
+class BaseInformativeCard(Generic[models.ID], BaseModel):
+    id: models.ID
+    user_id: models.ID
     title: str
     description: str
-    price: Float
+    price: float
 
 class InformativeCardRead(BaseInformativeCard):
     pass

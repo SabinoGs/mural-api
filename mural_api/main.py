@@ -1,10 +1,7 @@
 import uuid
 from typing import List
-import fastapi
 
-from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi_users_db_sqlalchemy import AsyncSession, SQLAlchemyUserDatabase
+from fastapi import FastAPI, Depends
 from fastapi_users import FastAPIUsers
 
 from mural_api.apps.user.models import Base
@@ -13,6 +10,8 @@ from mural_api.apps.user.models import User
 
 from mural_api.authentication.manager import get_user_manager
 from mural_api.authentication.backend import auth_backend
+
+from mural_api.apps.feed.urls import router as feed_router
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](
     get_user_manager,
@@ -39,6 +38,8 @@ app.include_router(
     prefix="/users",
     tags=["users"]
 )
+
+app.include_router(feed_router)
 
 @app.get("/")
 def root(user: User = Depends(current_active_user)):

@@ -1,13 +1,14 @@
 import uuid
-from typing import Any, Dict, Generic, Protocol, TypeVar
+from typing import Any, Dict, Generic, Protocol, TypeVar, Optional
+from fastapi import Depends
 
-from fastapi_users_db_sqlalchemy import GUID, AsyncSession, ForeignKey
-from pyparsing import Optional
-from sqlalchemy import Column, Integer, String, Float, select
+from fastapi_users_db_sqlalchemy import GUID
+from sqlalchemy import Column, Integer, String, Float, select, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select
 
-from mural_api.sql.config import Base
+from mural_api.sql.config import Base, get_async_session
 
 ID = TypeVar("ID")
 class InformativeCard(Base):
@@ -37,8 +38,12 @@ class InformativeCardProtocol(Protocol[ID]):
     def __init__(self) -> None:
         pass
 
+ICP = TypeVar("ICP", bound=InformativeCardProtocol)
 
-class InformativeCardDataBase(Generic[ID]):
+def get_card_db(session: AsyncSession = Depends(get_async_session)):
+    yield InformativeCardDataBase(session, InformativeCard)
+
+class InformativeCardDataBase(Generic[ICP, ID]):
     """
     Database adapter to for SQLAlchemy
     """
@@ -50,12 +55,12 @@ class InformativeCardDataBase(Generic[ID]):
         self.session = session
         self.table = table
 
-    async def get(self, id: ID) -> Optional[InformativeCardProtocol]:
+    async def get(self, id: ID) -> Optional[ICP]:
         statement = select(self.table).where(self.table.id == id)
         return await self._get_card(statement)
 
     
-    async def create(self, create_dict: Dict[str, Any]) -> InformativeCardProtocol:
+    async def create(self, create_dict: Dict[str, Any]) -> ICP:
         card = self.table(**create_dict)
         self.session.add(card)
         await self.session.commit()
@@ -66,7 +71,7 @@ class InformativeCardDataBase(Generic[ID]):
         result = await self.session.execute(statement)
         return result
 
-    async def _get_card(self, statement: Select) -> Optional[InformativeCardProtocol]:
+    async def _get_card(self, statement: Select) -> Optional[ICP]:
         result = self._run_statement(statement)
         card = result.first()
         
