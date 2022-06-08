@@ -1,5 +1,5 @@
 from . import models
-from typing import Generic
+from typing import Generic, Optional
 from pydantic import BaseModel
 
 
@@ -14,16 +14,21 @@ class InformativeCardUpdateDictModel(BaseModel):
 
 class BaseInformativeCard(Generic[models.ID], BaseModel):
     id: models.ID
-    user_id: models.ID
     title: str
     description: str
-    price: float
+    price: Optional[float]
+    user_id: models.ID
 
 class InformativeCardRead(BaseInformativeCard):
-    pass
+    
+    class Config:
+        orm_mode = True
 
 class InformativeCardUpdate(BaseInformativeCard, InformativeCardUpdateDictModel):
     pass
 
-class InformativeCardCreate(BaseInformativeCard, InformativeCardUpdateDictModel):
-    pass
+class InformativeCardCreate(InformativeCardUpdateDictModel):
+    user_id: models.ID
+    title: str
+    description: str
+    price: Optional[float]
