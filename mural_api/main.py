@@ -11,7 +11,7 @@ from mural_api.apps.user.models import User
 from mural_api.authentication.manager import get_user_manager
 from mural_api.authentication.backend import auth_backend
 
-from mural_api.apps.feed.urls import create_card_router
+from mural_api.apps.feed.urls import create_card_router, fetch_card_router, get_card_router
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](
     get_user_manager,
@@ -41,6 +41,14 @@ app.include_router(
 
 app.include_router(
     create_card_router(current_active_user)
+)
+
+app.include_router(
+    get_card_router()
+)
+
+app.include_router(
+    fetch_card_router()
 )
 
 @app.get("/")

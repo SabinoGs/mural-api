@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict, Generic, Protocol, TypeVar, Optional
+from typing import Any, Dict, Generic, List, Protocol, TypeVar, Optional
 from fastapi import Depends
 
 from fastapi_users_db_sqlalchemy import GUID
@@ -36,7 +36,7 @@ class InformativeCardProtocol(Protocol[ID]):
     user_id: uuid.uuid4
 
     def __init__(self) -> None:
-        pass
+        ...
 
 ICP = TypeVar("ICP", bound=InformativeCardProtocol)
 
@@ -59,6 +59,11 @@ class InformativeCardDataBase(Generic[ICP, ID]):
         statement = select(self.table).where(self.table.id == id)
         return await self._get_card(statement)
 
+    async def fetch(self, limit: int) -> Optional[List[ICP]]:
+        statement = select(self.table).limit(limit)
+        result = await self._run_statement(statement)
+        return [row[0] for row in result.all()]
+
     
     async def create(self, create_dict: Dict[str, Any]) -> ICP:
         card = self.table(**create_dict)
@@ -72,8 +77,8 @@ class InformativeCardDataBase(Generic[ICP, ID]):
         return result
 
     async def _get_card(self, statement: Select) -> Optional[ICP]:
-        result = self._run_statement(statement)
-        card = result.first()
+        result = await self._run_statement(statement)
+        card = result.one()
         
         if card is None:
             return None

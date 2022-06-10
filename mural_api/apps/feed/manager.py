@@ -49,3 +49,13 @@ class InformativeCardManager():
         create_dict.user_id = current_user.id
         card = await self.card_db.create(create_dict.create_update_dict())
         return card
+
+    async def fetch(self, limit: int = 15):
+        """
+        Fetch a list of cards
+
+        :param limit: Number of elements to retrieve
+        """
+
+        cards = await self.card_db.fetch(limit)
+        return cards
