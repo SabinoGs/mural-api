@@ -1,12 +1,14 @@
+import time
 import uuid
 from typing import Any, Dict, Generic, List, Protocol, TypeVar, Optional
 from fastapi import Depends
 
 from fastapi_users_db_sqlalchemy import GUID
-from sqlalchemy import Column, Integer, String, Float, select, ForeignKey
+from sqlalchemy import TIMESTAMP, Column, Integer, String, Float, select, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select
+from traitlets import default
 
 from mural_api.sql.config import Base, get_async_session
 
@@ -19,7 +21,7 @@ class InformativeCard(Base):
     title = Column(String(length=256), nullable=False)
     description = Column(String(length=512), nullable=True)
     price = Column(Float, nullable=True)
-
+    created_at = Column(TIMESTAMP(timezone=True), default=time.time())
     user_id = Column(GUID, ForeignKey('user.id'))
     user = relationship("User", back_populates="cards")
 

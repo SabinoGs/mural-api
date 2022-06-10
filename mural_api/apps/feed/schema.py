@@ -1,3 +1,4 @@
+import datetime
 from . import models
 from typing import Generic, Optional
 from pydantic import BaseModel
@@ -20,6 +21,8 @@ class BaseInformativeCard(Generic[models.ID], BaseModel):
     user_id: models.ID
 
 class InformativeCardRead(BaseInformativeCard):
+
+    created_at: Optional[datetime.datetime]
     
     class Config:
         orm_mode = True
