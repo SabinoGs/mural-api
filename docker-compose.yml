@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: mural-api-postgres
+    image: postgres:12
+    volumes:
+      - mural-api-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: mural_api
+      POSTGRES_USER: mural_api
+      POSTGRES_PASSWORD: mural_api
+
+
+volumes:
+  mural-api-data:

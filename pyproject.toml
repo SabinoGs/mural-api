@@ -15,6 +15,7 @@ aiosqlite = "^0.17.0"
 asyncpg = "^0.25.0"
 fastapi-users-db-sqlalchemy = "4.0.3"
 alembic = "^1.7.7"
+psycopg2 = "^2.9.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
